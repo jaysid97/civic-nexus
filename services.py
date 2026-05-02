@@ -65,7 +65,7 @@ class ElectionAssistant:
         try:
             # We use gemini-1.5-pro-latest which supports multimodality and tools
             self.model = genai.GenerativeModel(
-                model_name='gemini-1.5-pro',
+                model_name='gemini-2.5-pro',
                 tools=[get_state_registration_deadline],
                 system_instruction=SYSTEM_INSTRUCTION
             )
