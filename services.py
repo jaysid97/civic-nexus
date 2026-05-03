@@ -10,8 +10,10 @@ import google.generativeai as genai
 from google.generativeai.types import content_types
 from PIL import Image
 
+import streamlit as st
 from config import Config
 from utils.logger import setup_logger
+from google_workspace import add_election_reminder_to_calendar, find_polling_location_via_maps
 
 logger = setup_logger(__name__)
 
@@ -39,6 +41,7 @@ STATE_DEADLINES = {
     "florida": "Online/Mail/In-Person: Oct 7"
 }
 
+@st.cache_data
 def get_state_registration_deadline(state_name: str) -> str:
     """
     Looks up the voter registration deadline for a given US state.
@@ -66,7 +69,7 @@ class ElectionAssistant:
             # We use gemini-1.5-pro-latest which supports multimodality and tools
             self.model = genai.GenerativeModel(
                 model_name='gemini-2.5-flash',
-                tools=[get_state_registration_deadline],
+                tools=[get_state_registration_deadline, add_election_reminder_to_calendar, find_polling_location_via_maps],
                 system_instruction=SYSTEM_INSTRUCTION
             )
             # Start chat session with empty history

@@ -16,10 +16,14 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Initialize Assistant in session state to maintain chat session across reruns
+@st.cache_resource
+def get_assistant() -> ElectionAssistant:
+    """Cached initialization of the ElectionAssistant."""
+    logger.info("Initializing new ElectionAssistant via cache.")
+    return ElectionAssistant()
+
 if "assistant" not in st.session_state:
-    logger.info("Initializing new ElectionAssistant in session state.")
-    st.session_state.assistant = ElectionAssistant()
+    st.session_state.assistant = get_assistant()
 
 if "messages" not in st.session_state:
     st.session_state.messages = []
